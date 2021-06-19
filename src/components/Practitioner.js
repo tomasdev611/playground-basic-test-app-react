@@ -60,7 +60,7 @@ const Practitioner = () => {
 
   return (
     <div>
-      <table className="table table-striped">
+      <table className="table table-striped text-center">
         <thead>
           <tr>
             <th scope="col">Profile Image</th>
