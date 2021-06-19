@@ -1,0 +1,1 @@
+export { fetchPractitioners } from "../reducers/practitioner";
