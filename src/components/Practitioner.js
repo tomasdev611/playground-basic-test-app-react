@@ -5,16 +5,18 @@ import { selectFetchingPractitioners } from "../redux/selectors/practitioner";
 import { fetchPractitioners } from "../redux/actions/practitioner";
 import { useDispatch, useSelector } from "react-redux";
 import ReactLoading from "react-loading";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 const Practitioner = () => {
-
   const [practitioners, setPractitioners] = useState([]);
+  const [showDelete, setShowDelete] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   const dispatch = useDispatch();
   const isFetchingPractitioners = useSelector(selectFetchingPractitioners);
 
   useEffect(() => {
     dispatch(fetchPractitioners()).then((res) => {
-      console.log(flattenPractitionerObj(res.payload));
       setPractitioners(flattenPractitionerObj(res.payload));
     })
   }, [dispatch]);
@@ -33,6 +35,21 @@ const Practitioner = () => {
     });
   };
 
+  const showDeleteModal = (id) => {
+    setSelectedId(id);
+    setShowDelete(true);
+  }
+
+  const closeDeleteModal = () => {
+    setSelectedId(null);
+    setShowDelete(false);
+  }
+
+  const deletePractitioner = () => {
+    setPractitioners(practitioners.filter((p) => p.id !== selectedId))
+    closeDeleteModal();
+  }
+
   if (isFetchingPractitioners) {
     return (
       <div className="position-absolute" style={{ top: '50%', left: '50%' }}>
@@ -50,6 +67,7 @@ const Practitioner = () => {
             <th scope="col">Full Name</th>
             <th scope="col">Gender</th>
             <th scope="col">Date of Birth</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -57,12 +75,27 @@ const Practitioner = () => {
             practitioners.map((practitioner, index) => (
               <PractitionerCard
                 data={practitioner}
+                onDelete={() => showDeleteModal(practitioner.id)}
                 key={index}
               />
             ))
           }
         </tbody>
       </table>
+      <Modal show={showDelete} onHide={closeDeleteModal}>
+        <Modal.Header>
+          <Modal.Title>Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure to delete this practitioner?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={deletePractitioner}>
+            Yes
+          </Button>
+          <Button variant="secondary" onClick={closeDeleteModal}>
+            No
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

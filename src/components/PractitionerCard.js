@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as moment from 'moment';
 
-const PractitionerCard = ({ data }) => {
+const PractitionerCard = ({ data, onDelete }) => {
   const [personalInfo, setPersonalInfo] = useState(data);
 
   useEffect(() => {
@@ -28,6 +28,9 @@ const PractitionerCard = ({ data }) => {
       <td>{name ? name : 'N/A'}</td>
       <td>{gender ? gender : 'N/A'}</td>
       <td>{dob ? moment(dob).format('YYYY/MM/DD') : 'N/A'}</td>
+      <td>
+        <button type="button" className="btn btn-primary" onClick={onDelete}>Delete</button>
+      </td>
     </tr>
   );
 }
